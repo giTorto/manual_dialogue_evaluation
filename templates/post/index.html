@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Welcome</title>
+    {% load staticfiles %}
+    <link rel="stylesheet" type="text/css" href="{% static 'post/evaluate.css' %}">
+
+</head>
+<body>
+    <div class="container">
+            <div id="header">
+            <h1>Dialogues to evaluate</h1>
+            </div>
+
+
+            <div id="section">
+                Hereunder there is the list of dialogues to evaluate, each entry is a starting post.
+
+                {% if latest_post_list %}
+                 <ul>
+                    {% for dialogue in latest_post_list %}
+                        <li><a href="/dialogues/{{ dialogue.did }}/">{{ dialogue.content }}</a></li>
+                    {% endfor %}
+                    </ul>
+                {% else %}
+                    <p>No Dialogues available.</p>
+                {% endif %}
+            </div>
+
+            <div id="footer">
+            Copyright © W3Schools.com
+            </div>
+    </div>
+
+    Welcome to the website that allows to evaluate dialogues
+</body>
+</html>

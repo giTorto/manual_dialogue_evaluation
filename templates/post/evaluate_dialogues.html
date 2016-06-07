@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+{% load staticfiles %}
+    <link rel="stylesheet" type="text/css" href="{% static 'post/evaluate.css' %}">
+    <meta charset="UTF-8">
+    <title>Evaluate Dialogues</title>
+</head>
+<body>
+    <div class="container">
+            <div id="header">
+            <h1>City Gallery</h1>
+            </div>
+
+            <div id="nav">
+                <div id="next_reply">
+                    Next reply
+                </div>
+            </div>
+
+            <div id="section">
+                <div id="myDiagramDiv"
+                    style="width:1200px; height:500px; background-color: #DAE4E4;"></div>
+            </div>
+
+            <div id="footer">
+            Copyright © W3Schools.com
+            </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gojs/1.6.7/go-debug.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
+
+    <!--<script src="https://raw.githubusercontent.com/eligrey/Blob.js/master/Blob.js"></script>-->
+    <script src=" {% static 'post/eval_js_code.js' %}"></script>
+
+
+</body>
+</html>
