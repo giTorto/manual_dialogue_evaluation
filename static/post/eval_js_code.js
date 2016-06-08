@@ -155,8 +155,6 @@ function compare(a,b) {
 }
 
 function createDiagram(){
-
-
     var $ = go.GraphObject.make;
     myDiagram =
         $(go.Diagram, "myDiagramDiv",  {
@@ -178,6 +176,25 @@ function createDiagram(){
                 alternateNodeSpacing: 20
               })
     });
+    var levelColors = ["#AC193D/#BF1E4B", "#2672EC/#2E8DEF"];
+
+    // override TreeLayout.commitNodes to also modify the background brush based on the tree depth level
+    myDiagram.layout.commitNodes = function() {
+      go.TreeLayout.prototype.commitNodes.call(myDiagram.layout);  // do the standard behavior
+      // then go through all of the vertexes and set their corresponding node's Shape.fill
+      // to a brush dependent on the TreeVertex.level value
+      myDiagram.layout.network.vertexes.each(function(v) {
+        if (v.node) {
+          var level = v.level % (levelColors.length);
+          if (v.level!=0 && level==0)
+              level++;
+          var colors = levelColors[level].split("/");
+          var shape = v.node.findObject("SHAPE");
+          if (shape) shape.fill = $(go.Brush, "Linear", { 0: colors[0], 1: colors[1], start: go.Spot.Left, end: go.Spot.Right });
+        }
+      });
+    };
+
     // define a simple Node template
     myDiagram.nodeTemplate =
       $(go.Node, "Auto",
@@ -228,15 +245,18 @@ function createDiagram(){
               margin: new go.Margin(6, 10, 0, 3),
               defaultAlignment: go.Spot.Left
             },
-            $(go.RowColumnDefinition, { column: 1, width: 2 }),
+            $(go.RowColumnDefinition, { column: 4, width: 2 }),
 
         // the entire node will have a light-blue background
         $(go.TextBlock,
           "User A",  // the initial value for TextBlock.text
             // some room around the text, a larger font, and a white stroke:
-            { stroke: "white", font: "bold 16px sans-serif ",editable:false,row:0,column:0,columnSpan: 5},
+            { stroke: "white", font: "bold 16px sans-serif ",editable:false,row:0,column:0,columnSpan:2},
             // TextBlock.text is data bound to the "name" attribute of the model data
             new go.Binding("text", "name")),
+              $(go.TextBlock, "0",
+                  { stroke: "white", font: "bold 12px sans-serif ",editable:false,row:0,column:3},
+                  new go.Binding("text","pid")),
           $(go.TextBlock, 'Default Text',
               {stroke: "white", font: "12px sans-serif",isMultiline: true,editable:false,row:1,column:0,columnSpan:5 },
               new go.Binding("text",'content'))
@@ -326,6 +346,13 @@ $.getJSON("/Dialogue_to_graph/dialogues/get", function(json) {
     var model = $(go.TreeModel);
     model.nodeDataArray = new_model;
     myDiagram.model = model;
+
+     if (nextreply == array.length){
+        ( function($) {
+            $("#next_reply").text('Commit Graph Representation')
+        } ) ( jQuery );
+    }
+
     //console.log(model.nodeDataArray );
     /*
     keys.forEach(function(did){
