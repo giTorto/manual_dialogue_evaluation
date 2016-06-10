@@ -27,7 +27,10 @@ def evaluate_graph(request):
     return HttpResponse(template.render(context,request))
 
 def get_dialogues(request):
-    q = Post.objects.values('did').filter(evaluated=0).distinct()
+    #arindams_dids = [108885,110183,117102,120658,125845,138812,157640,157987,160170,165422,192811,193270,199820,206141,209851,
+    #        218673,221213,222295,224027,227302,234961,241551,241896,261593,269696,270727,272514,275539,277957,280554]
+
+    q = Post.objects.values('did').filter(evaluated=0).distinct() #.filter(did__in=arindams_dids)
     dids = [x['did'] for x in list(q)[:3]]
     rs = Post.objects.filter(did__in=dids)
     del dids
@@ -40,6 +43,17 @@ def update_db(did_up):
     q = Post.objects.filter(did=did_up).update(evaluated=1)
     print 'Updated ', q, ' rows'
     return
+
+@csrf_exempt
+def reset_dids(request):
+    arindams_dids = [108885,110183,117102,120658,125845,138812,157640,157987,160170,165422,192811,193270,199820,206141,
+                     209851, 218673,221213,222295,
+                     224027,227302,234961,241551,241896,261593,269696,270727,272514,275539,277957,280554]
+
+    q = Post.objects.filter(did__in=arindams_dids).update(evaluated=0)
+    print 'Updated ', q, ' rows'
+    return HttpResponse("OK")
+
 
 def js_graph_to_std(json_data):
     json_graph = json_data['nodeDataArray']
