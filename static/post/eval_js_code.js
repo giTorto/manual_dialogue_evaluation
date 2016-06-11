@@ -118,6 +118,12 @@ function create_starting_graph(){
     var model = $(go.TreeModel);
     model.nodeDataArray = new_model;
     myDiagram.model = model;
+
+     if (nextreply == array.length){
+        ( function($) {
+            $("#next_reply").text('Commit Graph Representation')
+        } ) ( jQuery );
+    }
 }
 
 function createNewNode() {
